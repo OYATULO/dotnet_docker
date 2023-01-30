@@ -1,0 +1,56 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
+*@
+@{
+    ViewData["Title"] = "Student";
+}
+
+<input type="text" id="search" />
+<button type="button" id="btnsearch">Search</button>
+<button type="button" id="btnsearch1">Search1</button>
+
+<div id="main">
+
+</div>
+
+<script src="~/jquery/jquery.min.js"></script>
+<script>
+    var block = document.querySelector("#main");
+    
+    var _students=[];
+    $("#btnsearch1").click(()=>{
+        GetStudents()
+    });
+    $("#btnsearch").click(() => {
+        f()
+    });
+    function GetStudents(){
+        $("#main").text("");
+        _students=[];
+        var search = $.trim($("#search").val());
+        $.get("Student/GetStudents?name=" + search, (students) => {
+               _students=students;
+            $.map(students,(student)=>{
+                $("#main").append(student.name+"<br />");
+            })
+        });
+    }
+
+   function f(){
+       block.innerHTML = "";
+       var st = document.querySelector("#search").value;
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+              var a = JSON.parse(this.responseText);
+              a.map((data)=>{
+                  block.innerHTML += data.name+"<br />";
+              })
+            }
+        }
+        xhttp.open("POST", "Student/GetStudents?name=" + st, true);
+        xhttp.send();
+   }
+
+</script>
